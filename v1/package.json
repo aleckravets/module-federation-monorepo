@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "lerna run --scope @smc/* --parallel start",
+    "build": "lerna run --scope @smc/* build",
+    "serve": "lerna run --scope @smc/* --parallel serve",
+    "clean": "lerna run --scope @smc/* --parallel clean",
+    "bootstrap": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "lerna": "3.22.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

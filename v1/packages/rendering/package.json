@@ -1,0 +1,9 @@
+{
+  "name": "@smc/rendering",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.js",
+  "peerDependencies": {
+    "react": "^16.13.0"
+  }
+}

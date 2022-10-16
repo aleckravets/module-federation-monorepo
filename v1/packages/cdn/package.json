@@ -1,0 +1,12 @@
+{
+  "name": "@smc/cdn",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "serve": "14.0.1"
+  },
+  "scripts": {
+    "start": "serve -p 3002 packages",
+    "links": "mklink /d charting ..\\..\\charting\\dist"
+  }
+}
