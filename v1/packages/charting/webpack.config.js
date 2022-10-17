@@ -1,18 +1,18 @@
 const ModuleFederationPlugin = require('webpack').container.ModuleFederationPlugin;
 const path = require('path');
+const {name, version} = require('./package.json');
+
+const packageName = `${name}-${version}`;
 
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'dist', require('./package.json').version),
-    },
-    port: 3002,
-  },
   output: {
     path: path.join(__dirname, 'dist', require('./package.json').version),
     publicPath: 'auto',
+    // used for loading chunks, unique to avoid conflicts between different versions
+    uniqueName: packageName,
+    clean: true,
   },
   optimization: {
     minimize: false
@@ -38,7 +38,11 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: `charting-${require('./package.json').version}`.replaceAll(/[-\\.]/g, '_'),
+      name: packageName,
+      library: {
+        name: `charting-${version}`,
+        type: 'window'
+      },
       filename: 'remoteEntry.js',
       exposes: {
         './index': './src/index',

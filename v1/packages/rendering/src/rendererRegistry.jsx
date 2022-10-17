@@ -16,6 +16,6 @@ export function getRenderer(name) {
 }
 
 export function resolveRenderer(name, props) {
-  const Renderer = getRenderer(name);
-  return <Renderer {...props}/>;
+  const renderer = getRenderer(name);
+  return <div>{renderer()}</div>;
 }

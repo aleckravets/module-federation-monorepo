@@ -6,7 +6,7 @@ function App() {
   const [renderedContent, setRenderedContent] = useState();
 
   async function renderChart(version) {
-    await loadModule(`charting-${version}`.replaceAll(/[-\\.]/g, '_'), 'default', './index', `http://localhost:3002/charting/${version}/remoteEntry.js`);
+    await loadModule(`charting-${version}`, 'default', './index', `http://localhost:3002/charting/${version}/remoteEntry.js`);
     const chart = resolveRenderer('Chart');
     setRenderedContent(chart);
   }
