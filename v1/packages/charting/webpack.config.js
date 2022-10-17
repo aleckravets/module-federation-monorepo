@@ -10,12 +10,15 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist', require('./package.json').version),
     publicPath: 'auto',
-    // used for loading chunks, unique to avoid conflicts between different versions
+    // used for loading chunks, must be unique to avoid conflicts between different versions
     uniqueName: packageName,
     clean: true,
   },
   optimization: {
     minimize: false
+  },
+  resolve: {
+    extensions: ["", ".js", ".jsx"]
   },
   module: {
     rules: [
@@ -45,7 +48,7 @@ module.exports = {
       },
       filename: 'remoteEntry.js',
       exposes: {
-        './index': './src/index',
+        './index': './src/index'
       },
       shared: [
         {

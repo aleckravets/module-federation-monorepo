@@ -1,8 +1,11 @@
-import React from 'react';
-import {registerRenderer} from "@smc/rendering";
+import {chartRenderer} from "./chartRenderer";
 
 const version = require('../package.json').version;
 
 console.log(`Charting module initialization ${version}`);
 
-registerRenderer('Chart', () => `CHART ${version}`);
+export default {
+  renderers: {
+    Chart: chartRenderer
+  }
+}

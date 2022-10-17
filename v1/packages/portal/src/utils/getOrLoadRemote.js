@@ -57,6 +57,6 @@ export const getOrLoadRemote = (remote, shareScope, remoteFallbackUrl = undefine
       }
     } else {
       // remote already instantiated, resolve
-      resolve();
+      resolve(true);
     }
   });

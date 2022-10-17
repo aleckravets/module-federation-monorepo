@@ -6,8 +6,8 @@ function App() {
   const [renderedContent, setRenderedContent] = useState();
 
   async function renderChart(version) {
-    await loadModule(`charting-${version}`, 'default', './index', `http://localhost:3002/charting/${version}/remoteEntry.js`);
-    const chart = resolveRenderer('Chart');
+    await loadModule(`charting`, version);
+    const chart = resolveRenderer('Chart', null, `charting-${version}`);
     setRenderedContent(chart);
   }
 
@@ -18,11 +18,9 @@ function App() {
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
       }}
     >
-      <h1>Dynamic System Host</h1>
-      <h2>App 1</h2>
+      <h1>Portal dynamic modularity</h1>
       <p>
-        The Dynamic System will take advantage Module Federation <strong>remotes</strong> and{' '}
-        <strong>exposes</strong>. It will not load any components or modules that have been loaded
+        The dynamic modularity takes advantage of Module Federation. It will not load any components or modules that have been loaded
         already.
       </p>
       <button onClick={() => renderChart('1.1.0')}>Render chart 1.1.0</button>
