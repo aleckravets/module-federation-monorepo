@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "npm run -w packages/portal build",
+    "build": "npm run build --ws",
+    "serve": "lerna run --scope @smc/* --parallel serve",
+    "clean": "lerna run --scope @smc/* --parallel clean"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
