@@ -7,6 +7,6 @@
   },
   "scripts": {
     "start": "serve -p 3002 packages",
-    "links": "mklink /d charting ..\\..\\charting\\dist"
+    "//": "mklink /d charting ..\\..\\charting"
   }
 }

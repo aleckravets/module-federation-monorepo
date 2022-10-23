@@ -1,1 +1,1 @@
-export {registerRenderer, resolveRenderer} from "./rendererRegistry";
+export * from "./rendererRegistry";
