@@ -27,7 +27,7 @@ module.exports = function override(config, env) {
         name: uniqueName,
         type: 'window'
       },
-      filename: 'remoteEntry.[hash].js',
+      filename: 'remoteEntry.js',
       exposes: {
         './index': './src/index'
       },
