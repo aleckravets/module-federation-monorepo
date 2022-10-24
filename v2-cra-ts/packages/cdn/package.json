@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "serve": "14.0.1"
+    "express": "^4.18.2",
+    "serve-index": "^1.9.1"
   },
   "scripts": {
-    "start": "serve -p 3002 packages",
-    "//": "mklink /d charting ..\\..\\charting"
+    "start": "node src/index.js"
   }
 }
