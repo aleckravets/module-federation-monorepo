@@ -6,10 +6,10 @@ import {resolveRenderer} from "@smc/rendering";
 function App() {
   const [renderedContent, setRenderedContent] = useState();
 
-  async function renderChart(version) {
-    await loadModule(`charting`, version);
-    const chart = resolveRenderer('Chart', null, `charting-${version}`);
-    setRenderedContent(chart);
+  async function renderFromModule(moduleName, apiVersion, rendererName, props) {
+    const {renderingNamespace} = await loadModule(`Systemorph.Charting`, apiVersion);
+    const renderedContent = resolveRenderer(rendererName, props, renderingNamespace);
+    setRenderedContent(renderedContent);
   }
 
   return (
@@ -24,8 +24,8 @@ function App() {
           The dynamic modularity takes advantage of Module Federation. It will not load any components or modules that have been loaded
           already.
         </p>
-        <button onClick={() => renderChart('0.1.0')}>Render chart 0.1.0</button>
-        <button onClick={() => renderChart('0.2.0')}>Render chart 0.2.0</button>
+        <button onClick={() => renderFromModule('Systemorph.Charting', '1', 'Chart', null)}>Render Chart v1</button>
+        <button onClick={() => renderFromModule('Systemorph.Charting', '2', 'Chart', null)}>Render Chart v2</button>
         <div style={{marginTop: '2em'}}>
           {renderedContent}
         </div>

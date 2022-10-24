@@ -2,12 +2,12 @@ const path = require('path');
 const {babelInclude} = require("customize-cra");
 const ModuleFederationPlugin = require('webpack').container.ModuleFederationPlugin;
 const {DefinePlugin} = require('webpack');
-const {name, version} = require('./package.json');
+const {name, version, moduleName} = require('./package.json');
 
-const packageName = `${name}-${version}`;
+const uniqueName = `${moduleName}-${version}`;
 
 module.exports = function override(config, env) {
-  config.output.uniqueName = packageName;
+  config.output.uniqueName = uniqueName;
   config.output.publicPath = 'auto';
   // config.output.path = path.join(__dirname, version);
   config.optimization.minimize = false;
@@ -22,12 +22,12 @@ module.exports = function override(config, env) {
 
   config.plugins.push(
     new ModuleFederationPlugin({
-      name: packageName,
+      name: uniqueName,
       library: {
-        name: `charting-${version}`,
+        name: uniqueName,
         type: 'window'
       },
-      filename: 'remoteEntry.js',
+      filename: 'remoteEntry.[hash].js',
       exposes: {
         './index': './src/index'
       },

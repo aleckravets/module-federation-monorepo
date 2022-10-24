@@ -4,9 +4,12 @@
   "private": true,
   "devDependencies": {
     "express": "^4.18.2",
-    "serve-index": "^1.9.1"
+    "serve-index": "^1.9.1",
+    "serve": "^14.0.1",
+    "http-server": "^14.1.1"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "build": "node build.js",
+    "cdn": "http-server build --cors"
   }
 }
