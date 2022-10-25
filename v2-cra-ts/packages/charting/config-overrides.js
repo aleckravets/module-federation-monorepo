@@ -1,16 +1,14 @@
 const path = require('path');
 const {babelInclude} = require("customize-cra");
-const ModuleFederationPlugin = require('webpack').container.ModuleFederationPlugin;
+const {ModuleFederationPlugin} = require('webpack').container;
 const {DefinePlugin} = require('webpack');
-const {name, version, moduleName, apiVersion} = require('./package.json');
+const {version, moduleName, apiVersion} = require('./package.json');
 
-const uniqueName = `${moduleName}-${version}`;
-
-// TODO: move to modularity (10/25/2022, akravets)
-const moduleSystemName = `${moduleName}-${apiVersion}`;
+// TODO: this logic should be exposed on @smc/modularity (10/25/2022, akravets)
+const qualifiedModuleName = `${moduleName}-${apiVersion}`;
 
 module.exports = function override(config, env) {
-  config.output.uniqueName = moduleSystemName;
+  config.output.uniqueName = qualifiedModuleName;
   config.output.publicPath = 'auto';
   // config.output.path = path.join(__dirname, version);
   config.optimization.minimize = false;
@@ -25,9 +23,9 @@ module.exports = function override(config, env) {
 
   config.plugins.push(
     new ModuleFederationPlugin({
-      name: moduleSystemName,
+      name: qualifiedModuleName,
       library: {
-        name: moduleSystemName,
+        name: qualifiedModuleName,
         type: 'window'
       },
       filename: 'remoteEntry.js',

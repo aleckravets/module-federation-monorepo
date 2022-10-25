@@ -1,14 +1,36 @@
-declare global {
-    interface Window {
-        [index: string]: any;
+import axios from "axios";
+
+// TODO: factor out (10/25/2022, akravets)
+const CDN = 'http://localhost:8080';
+
+async function loadFromCDN(path: string) {
+    const response = await axios.get(CDN + '/' + path);
+    return response.data;
+}
+
+export const loadModule = async (moduleName: string, apiVersion: string, onInit?: () => void) => {
+    const manifest = await loadFromCDN(`module-manifest.json`);
+    const moduleEntry = manifest[moduleName][apiVersion];
+
+    const remote = `${moduleName}-${apiVersion}`;
+
+    const url = `${CDN}/${moduleEntry}`;
+    const initialized = await getOrLoadRemote(remote, 'default', url);
+
+    const container = window[remote] as any;
+    const indexModule = await container.get('./index');
+    const defaultExport = indexModule().default;
+
+    if (!initialized && onInit) {
+        onInit();
     }
 
-    const __webpack_share_scopes__: any;
+    return defaultExport;
 }
 
 // https://gist.github.com/ScriptedAlchemy/3a24008ef60adc47fad1af7d3299a063
-export const getOrLoadRemote = (remote: string, shareScope: string, remoteFallbackUrl: string) =>
-    new Promise<boolean>((resolve, reject) => {
+function getOrLoadRemote(remote: string, shareScope: string, remoteFallbackUrl: string) {
+    return new Promise<boolean>((resolve, reject) => {
         // check if remote exists on window
         if (!window[remote]) {
             // search dom to see if remote tag exists, but might still be loading (async)
@@ -51,3 +73,4 @@ export const getOrLoadRemote = (remote: string, shareScope: string, remoteFallba
             resolve(true);
         }
     });
+}

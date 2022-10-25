@@ -1,12 +1,11 @@
-//@ts-nocheck
 import React, {useState} from 'react';
-import {loadModule} from './utils/loadModule';
+import {loadModule} from '@smc/modularity';
 import {resolveRenderer} from "@smc/rendering";
 
 function App() {
-  const [renderedContent, setRenderedContent] = useState();
+  const [renderedContent, setRenderedContent] = useState<JSX.Element>();
 
-  async function renderFromModule(moduleName, apiVersion, rendererName, props) {
+  async function renderFromModule(moduleName: string, apiVersion: string, rendererName: string, props: any) {
     const {namespace} = await loadModule(`Systemorph.Charting`, apiVersion);
     const renderedContent = resolveRenderer(rendererName, props, namespace);
     setRenderedContent(renderedContent);
