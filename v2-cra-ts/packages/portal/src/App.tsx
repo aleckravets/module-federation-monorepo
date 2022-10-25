@@ -7,8 +7,8 @@ function App() {
   const [renderedContent, setRenderedContent] = useState();
 
   async function renderFromModule(moduleName, apiVersion, rendererName, props) {
-    const {renderingNamespace} = await loadModule(`Systemorph.Charting`, apiVersion);
-    const renderedContent = resolveRenderer(rendererName, props, renderingNamespace);
+    const {namespace} = await loadModule(`Systemorph.Charting`, apiVersion);
+    const renderedContent = resolveRenderer(rendererName, props, namespace);
     setRenderedContent(renderedContent);
   }
 

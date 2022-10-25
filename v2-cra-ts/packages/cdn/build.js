@@ -26,11 +26,7 @@ modules.forEach(({name, modulePackageDir, version}) => {
 // manifest
 const manifest = modules.reduce((manifest, {moduleName, name, version, apiVersion, main}) => {
   manifest[moduleName] = {
-      [apiVersion]: {
-        version,
-        main: `./${modulesDirName}/${name}/${version}/${main || 'index.js'}`
-      }
-
+      [apiVersion]: `./${modulesDirName}/${name}/${version}/${main || 'index.js'}`
   }
   return manifest;
 }, {});

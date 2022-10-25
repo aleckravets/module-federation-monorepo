@@ -1,36 +1,37 @@
-//@ts-nocheck
 import { getOrLoadRemote } from './getOrLoadRemote';
-import {registerRenderer} from "@smc/rendering";
+import { registerRenderer } from "@smc/rendering";
 import axios from "axios";
-import {keys} from 'lodash';
 
-const CDN_URL = 'http://localhost:8080';
+const CDN = 'http://localhost:8080';
 
-async function getFromCDN(path) {
-  const response = await axios.get(CDN_URL + '/' + path);
-  return response.data;
+async function loadFromCDN(path: string) {
+    const response = await axios.get(CDN + '/' + path);
+    return response.data;
 }
 
-export const loadModule = async (moduleName, apiVersion) => {
-  const manifest = await getFromCDN(`module-manifest.json`);
-  const {version, main} = manifest[moduleName][apiVersion];
-  const remote = `${moduleName}-${version}`;
-  const url = `${CDN_URL}/${main}`;
-  const initialized = await getOrLoadRemote(remote, 'default', url);
+export const loadModule = async (moduleName: string, apiVersion: number) => {
+    const manifest = await loadFromCDN(`module-manifest.json`);
+    const moduleEntry = manifest[moduleName][apiVersion];
 
-  const renderingNamespace = `${moduleName}-${apiVersion}`;
+    // TODO: factor out and export
+    const remote = `${moduleName}-${apiVersion}`;
 
-  const container = window[remote as any] as any;
-  const indexModule = await container.get('./index');
-  const {renderers} = indexModule().default;
+    const url = `${CDN}/${moduleEntry}`;
+    const initialized = await getOrLoadRemote(remote, 'default', url);
 
-  if (!initialized) {
-    if (renderers) {
-      Object.keys(renderers).forEach(k => {
-        registerRenderer(k, renderers[k], renderingNamespace);
-      })
+    const container = window[remote] as any;
+    const indexModule = await container.get('./index');
+    const {renderers} = indexModule().default;
+
+    const namespace = remote;
+
+    if (!initialized) {
+        if (renderers) {
+            Object.keys(renderers).forEach(k => {
+                registerRenderer(k, renderers[k], namespace);
+            })
+        }
     }
-  }
 
-  return {renderingNamespace, renderers: keys(renderers)};
-};
+    return {namespace, renderers: Object.keys(renderers)};
+}
