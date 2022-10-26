@@ -1,6 +1,3 @@
-// TODO: move to env variable (10/25/2022, akravets)
-const CDN = 'http://localhost:8080';
-
 declare global {
     interface Window {
         [index: string]: any;
@@ -17,7 +14,7 @@ export const loadModule = async (moduleName: string, apiVersion: string) => {
 
     const remote = `${moduleName}-${apiVersion}`;
 
-    const url = `${CDN}/${moduleEntry}`;
+    const url = `${process.env.REACT_APP_CDN_URL}/${moduleEntry}`;
     await getOrLoadRemote(remote, 'default', url);
 
     const container = window[remote] as any;
