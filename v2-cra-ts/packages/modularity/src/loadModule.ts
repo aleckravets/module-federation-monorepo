@@ -1,12 +1,5 @@
-import axios from "axios";
-
 // TODO: move to env variable (10/25/2022, akravets)
 const CDN = 'http://localhost:8080';
-
-async function loadFromCDN(path: string) {
-    const response = await axios.get(CDN + '/' + path);
-    return response.data;
-}
 
 declare global {
     interface Window {
@@ -17,7 +10,9 @@ declare global {
 }
 
 export const loadModule = async (moduleName: string, apiVersion: string) => {
-    const manifest = await loadFromCDN(`module-manifest.json`);
+    // loading manifest only once on demand
+    const {default: manifestPromise} = await import('./moduleManifest');
+    const manifest = await manifestPromise;
     const moduleEntry = manifest[moduleName][apiVersion];
 
     const remote = `${moduleName}-${apiVersion}`;
