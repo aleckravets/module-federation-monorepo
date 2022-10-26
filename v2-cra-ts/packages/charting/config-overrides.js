@@ -30,7 +30,8 @@ module.exports = function override(config, env) {
       },
       filename: 'remoteEntry.js',
       exposes: {
-        './index': './src/index'
+        './index': './src/index',
+        './presenters/Chart': './src/chartRenderer'
       },
       shared: [
         {

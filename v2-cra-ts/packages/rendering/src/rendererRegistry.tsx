@@ -36,33 +36,12 @@ export function resolveRenderer(name: string, props: any, namespace = 'default')
     return <Renderer {...props}/>;
 }
 
-export async function renderPresenter<TExtraProps>({
-                                                       name,
-                                                       data,
-                                                       options,
-                                                       moduleName,
-                                                       apiVersion
-                                                   }: Presenter, extraProps?: TExtraProps) {
+export function renderPresenter(presenter: Presenter) {
+    const {name, moduleName, apiVersion, ...props} = presenter;
 
-    const rendererProps = {data, options, ...extraProps};
+    const Component = React.lazy(() => loadModule(moduleName!, apiVersion!, `./presenters/${name}`));
 
-    if (moduleName && apiVersion) {
-        const moduleNamespace = `${moduleName}-${apiVersion}`;
-
-        if (!rendererRegistry[moduleNamespace]) {
-            const {renderers} = await loadModule(moduleName, apiVersion);
-
-            if (renderers) {
-                Object.keys(renderers).forEach(k => {
-                    registerRenderer(k, renderers[k], moduleNamespace);
-                })
-            }
-        }
-
-        return resolveRenderer(name, rendererProps, moduleNamespace);
-    }
-
-    return resolveRenderer(name, rendererProps);
+    return <Component {...props}/>;
 }
 
 

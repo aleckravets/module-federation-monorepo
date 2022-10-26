@@ -6,7 +6,7 @@ declare global {
     const __webpack_share_scopes__: any;
 }
 
-export const loadModule = async (moduleName: string, apiVersion: string) => {
+export const loadModule = async (moduleName: string, apiVersion: string, exposedModule = './index') => {
     // loading manifest only once on demand
     const {default: manifestPromise} = await import('./moduleManifest');
     const manifest = await manifestPromise;
@@ -18,8 +18,8 @@ export const loadModule = async (moduleName: string, apiVersion: string) => {
     await getOrLoadRemote(remote, 'default', url);
 
     const container = window[remote] as any;
-    const indexModule = await container.get('./index');
-    return indexModule().default;
+    const module = await container.get(exposedModule);
+    return module();
 }
 
 // https://gist.github.com/ScriptedAlchemy/3a24008ef60adc47fad1af7d3299a063

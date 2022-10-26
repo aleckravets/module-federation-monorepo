@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Presenter, renderPresenter } from "@smc/rendering";
+import { Presenter, renderPresenter, resolveRenderer } from "@smc/rendering";
+import { loadModule } from "@smc/modularity";
 
 const chartV1: Presenter = {name: 'Chart', moduleName: 'Systemorph.Charting', apiVersion: '1'};
 const chartV2: Presenter = {name: 'Chart', moduleName: 'Systemorph.Charting', apiVersion: '2'};
@@ -8,9 +9,15 @@ const html: Presenter = {name: 'text/html', data: '<span>Hello, <b>World</b>!</s
 function App() {
     const [content, setContent] = useState<JSX.Element>();
 
-    async function setPresenter(presenter: Presenter) {
-        const content = await renderPresenter(presenter);
-        setContent(content);
+    function setPresenter(presenter: Presenter) {
+        if (presenter.moduleName) {
+            const content = renderPresenter(presenter);
+            setContent(content);
+        } else {
+            const {name, ...props} = presenter;
+            const content = resolveRenderer(name, props);
+            setContent(content);
+        }
     }
 
     return (
@@ -29,7 +36,9 @@ function App() {
             <button onClick={() => setPresenter(chartV1)}>Render Chart v1</button>
             <button onClick={() => setPresenter(html)}>Render Html</button>
             <div style={{marginTop: '2em'}}>
-                {content}
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    {content}
+                </React.Suspense>
             </div>
         </div>
     );
