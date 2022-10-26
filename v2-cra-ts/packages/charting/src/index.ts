@@ -1,8 +1,7 @@
 import {chartRenderer} from "./chartRenderer";
+const {apiVersion} = require('../package.json');
 
-const version = require('../package.json').version;
-
-console.log(`Charting module initialization ${version}`);
+console.log(`Charting module initialization ${apiVersion}`);
 
 export default {
   renderers: {

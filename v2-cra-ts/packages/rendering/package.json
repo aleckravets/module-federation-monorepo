@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
+  "dependencies": {
+    "@smc/modularity": "^0.1.0"
+  },
   "peerDependencies": {
     "react": "^18.2.0"
   }

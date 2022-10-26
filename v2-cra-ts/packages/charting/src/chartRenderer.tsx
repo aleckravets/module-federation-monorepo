@@ -1,7 +1,8 @@
-import {resolveRenderer} from "@smc/rendering";
+import { resolveRenderer } from "@smc/rendering";
 import React from 'react';
-const version = require('../package.json').version;
+const {apiVersion} = require('../package.json');
 
 export const chartRenderer = () => {
-  return resolveRenderer('text/html', {data: `<span>CHART <i>${version}</i></span>`})
+  // module can render stuff from other modules e.g. renderPresenter({name: 'Scope', moduleName: 'Scopes'});
+  return resolveRenderer('text/html', {data: `<span>CHART <i>${apiVersion}</i></span>`})
 }

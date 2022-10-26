@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// TODO: factor out (10/25/2022, akravets)
+// TODO: move to env variable (10/25/2022, akravets)
 const CDN = 'http://localhost:8080';
 
 async function loadFromCDN(path: string) {
@@ -8,29 +8,31 @@ async function loadFromCDN(path: string) {
     return response.data;
 }
 
-export const loadModule = async (moduleName: string, apiVersion: string, onInit?: () => void) => {
+declare global {
+    interface Window {
+        [index: string]: any;
+    }
+
+    const __webpack_share_scopes__: any;
+}
+
+export const loadModule = async (moduleName: string, apiVersion: string) => {
     const manifest = await loadFromCDN(`module-manifest.json`);
     const moduleEntry = manifest[moduleName][apiVersion];
 
     const remote = `${moduleName}-${apiVersion}`;
 
     const url = `${CDN}/${moduleEntry}`;
-    const initialized = await getOrLoadRemote(remote, 'default', url);
+    await getOrLoadRemote(remote, 'default', url);
 
     const container = window[remote] as any;
     const indexModule = await container.get('./index');
-    const defaultExport = indexModule().default;
-
-    if (!initialized && onInit) {
-        onInit();
-    }
-
-    return defaultExport;
+    return indexModule().default;
 }
 
 // https://gist.github.com/ScriptedAlchemy/3a24008ef60adc47fad1af7d3299a063
 function getOrLoadRemote(remote: string, shareScope: string, remoteFallbackUrl: string) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         // check if remote exists on window
         if (!window[remote]) {
             // search dom to see if remote tag exists, but might still be loading (async)
@@ -44,7 +46,7 @@ function getOrLoadRemote(remote: string, shareScope: string, remoteFallbackUrl: 
                     window[remote].__initialized = true;
                 }
                 // resolve promise so marking remote as loaded
-                resolve(false);
+                resolve();
                 originOnload && originOnload();
             }
             if (existingRemote) {
@@ -70,7 +72,7 @@ function getOrLoadRemote(remote: string, shareScope: string, remoteFallbackUrl: 
             }
         } else {
             // remote already instantiated, resolve
-            resolve(true);
+            resolve();
         }
     });
 }

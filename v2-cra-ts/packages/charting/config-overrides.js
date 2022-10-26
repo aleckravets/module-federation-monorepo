@@ -4,7 +4,7 @@ const {ModuleFederationPlugin} = require('webpack').container;
 const {DefinePlugin} = require('webpack');
 const {version, moduleName, apiVersion} = require('./package.json');
 
-// TODO: this logic should be exposed on @smc/modularity (10/25/2022, akravets)
+// TODO: this logic should be exposed on @smc/modularity as a js-module (as opposed to current ts version) (10/25/2022, akravets)
 const qualifiedModuleName = `${moduleName}-${apiVersion}`;
 
 module.exports = function override(config, env) {
